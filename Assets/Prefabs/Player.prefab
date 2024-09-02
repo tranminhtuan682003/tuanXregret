@@ -161,7 +161,6 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6406888147811173059}
-  - {fileID: 564753252814497586}
 --- !u!143 &7621625961039912155
 CharacterController:
   m_ObjectHideFlags: 0
