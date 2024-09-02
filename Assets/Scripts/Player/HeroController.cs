@@ -25,8 +25,9 @@ public class HeroController : BaseController, IHealth
     #region Skills
     [Header("Skills")]
     [SerializeField] private List<SkillManager> skillManagers;
-    public bool changeScale;
     private SkillCooldowns cooldownManager;
+    public bool changeScale;
+    public GameObject teleportPrefab;
     #endregion
 
     #region Initialization
@@ -129,7 +130,9 @@ public class HeroController : BaseController, IHealth
                 Heal(50);
                 break;
             case "Auxiliary":
-                Debug.Log("Using Heal Auxiliary.");
+                GameObject teleport = Instantiate(teleportPrefab, transform);
+                teleport.transform.position = transform.position;
+                // Unfinished
                 break;
             case "Normal":
                 animator.SetTrigger("IsAttacking");

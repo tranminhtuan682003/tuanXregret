@@ -18,7 +18,7 @@ public class AttackAreaTower : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = segments + 1;
         lineRenderer.useWorldSpace = false;
-
+        lineRenderer.material.color = Color.green;
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
 

@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class SoldierAttackState : IState
 {
+    private SoldierController soldier;
+
+    public SoldierAttackState(SoldierController soldier)
+    {
+        this.soldier = soldier;
+    }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Nhập trạng thái tấn công");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        // unfinished
+        if (!soldier.isAttacking)
+        {
+            soldier.ChangeState(new SoldierMoveState(soldier));
+        }
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Rời khỏi trạng thái tấn công");
     }
 }

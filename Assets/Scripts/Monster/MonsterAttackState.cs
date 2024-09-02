@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterAttackState : MonoBehaviour
+public class MonsterAttackState : IState
 {
-    // Start is called before the first frame update
-    void Start()
+    private MonsterController monster;
+    public MonsterAttackState(MonsterController monster)
     {
-        
+        this.monster = monster;
+    }
+    public void Enter()
+    {
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute()
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void Exit()
+    {
+        throw new System.NotImplementedException();
     }
 }

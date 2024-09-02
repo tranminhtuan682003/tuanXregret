@@ -4,18 +4,28 @@ using UnityEngine;
 
 public class SoldierIdleState : IState
 {
+    private SoldierController soldier;
+
+    public SoldierIdleState(SoldierController soldier)
+    {
+        this.soldier = soldier;
+    }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("enter idleSoldierState");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        if (soldier.targetPositions.Count > 0)
+        {
+            soldier.ChangeState(new SoldierMoveState(soldier));
+        }
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("exit idleSoldierState");
     }
 }
