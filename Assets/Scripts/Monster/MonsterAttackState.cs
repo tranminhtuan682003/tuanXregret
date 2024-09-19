@@ -1,26 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterAttackState : IState
 {
     private MonsterController monster;
+
     public MonsterAttackState(MonsterController monster)
     {
         this.monster = monster;
     }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter AttackState");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        // Implement attack logic here
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit AttackState");
     }
 }

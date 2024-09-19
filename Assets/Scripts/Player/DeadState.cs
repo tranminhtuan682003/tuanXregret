@@ -11,16 +11,21 @@ public class DeadState : IState
 
     public void Enter()
     {
-        Debug.Log("Enter Dead State");
+        if (hero.gameObject.activeInHierarchy)
+        {
+            hero.animator.Play("Dead_com", 0, 0);
+        }
     }
+
 
     public void Execute()
     {
-        hero.Dead();
+        hero.SetStateDie();
     }
+
 
     public void Exit()
     {
-        Debug.Log("Exit Dead State");
+        hero.Dead();
     }
 }

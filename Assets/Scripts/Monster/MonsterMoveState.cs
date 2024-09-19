@@ -1,26 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterMoveState : IState
 {
     private MonsterController monster;
+
     public MonsterMoveState(MonsterController monster)
     {
         this.monster = monster;
     }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter MoveState");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        monster.FollowTarget();
+        if (!monster.Attack())
+        {
+            monster.ChangeState(new MonsterIdleState(monster));
+        }
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit MoveState");
     }
 }

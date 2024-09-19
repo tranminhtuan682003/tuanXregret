@@ -11,7 +11,7 @@ public class MoveState : IState
 
     public void Enter()
     {
-        Debug.Log("Enter Move State");
+        hero.animator.SetTrigger("Walking");
     }
 
     public void Execute()
@@ -25,6 +25,7 @@ public class MoveState : IState
 
     public void Exit()
     {
-        Debug.Log("Exit Move State");
+        hero.animator.ResetTrigger("Walking");
     }
 }
+

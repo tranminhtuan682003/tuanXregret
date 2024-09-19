@@ -146,5 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a651be723be669044bb5b5e0813799a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletTag: arrow
+  layerTargets:
+  - serializedVersion: 2
+    m_Bits: 512
+  - serializedVersion: 2
+    m_Bits: 8192
   speed: 25

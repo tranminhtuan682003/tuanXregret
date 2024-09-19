@@ -12,8 +12,8 @@ public class HeroController : BaseController, IHealth
     private Vector2 moveDirection;
     public Transform spawnPoint;
     private Transform target;
-    public bool isAttacking;
     private bool canAttack;
+    public bool attacking;
     public float CurrentHealth { get; set; }
     public float MaxHealth { get; set; }
 
@@ -50,12 +50,6 @@ public class HeroController : BaseController, IHealth
     private void Update()
     {
         currentState.Execute();
-
-        if (!isAttacking && IsAttacking())
-        {
-            ChangeState(new IdleState(this));
-        }
-
         if (healthSlider != null && cameraTransform != null)
         {
             healthSlider.transform.LookAt(cameraTransform);
@@ -87,12 +81,6 @@ public class HeroController : BaseController, IHealth
             rb.MovePosition(transform.position + movement * Time.deltaTime * moveSpeed);
             Quaternion newRotation = Quaternion.LookRotation(movement);
             rb.MoveRotation(newRotation);
-
-            animator.SetTrigger("IsMoving");
-        }
-        else
-        {
-            animator.ResetTrigger("IsMoving");
         }
     }
 
@@ -103,10 +91,6 @@ public class HeroController : BaseController, IHealth
     #endregion
 
     #region Attacking
-    public bool IsAttacking()
-    {
-        return animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-    }
 
     public void OnAttack(string attackType)
     {
@@ -114,7 +98,6 @@ public class HeroController : BaseController, IHealth
         {
             return;
         }
-        isAttacking = true;
         RotateToTarget();
         UseSkill(attackType);
         ChangeState(new AttackState(this));
@@ -135,21 +118,14 @@ public class HeroController : BaseController, IHealth
                 // Unfinished
                 break;
             case "Normal":
-                animator.SetTrigger("IsAttacking");
                 ObjectPool.Instance.SpawnFromPool("arrow", spawnPoint.position, spawnPoint.rotation, 1);
                 break;
             case "Skill1":
-                animator.SetTrigger("IsAttacking");
-                ObjectPool.Instance.SpawnFromPool("arrow", spawnPoint.position, spawnPoint.rotation, 1);
                 changeScale = true;
                 break;
             case "Skill2":
-                animator.SetTrigger("IsAttacking");
-                ObjectPool.Instance.SpawnFromPool("arrow", spawnPoint.position, spawnPoint.rotation, 1);
                 break;
             case "Skill3":
-                animator.SetTrigger("IsAttacking");
-                ObjectPool.Instance.SpawnFromPool("arrow", spawnPoint.position, spawnPoint.rotation, 1);
                 break;
             default:
                 Debug.LogWarning("Skill not recognized: " + skillName);
@@ -157,10 +133,15 @@ public class HeroController : BaseController, IHealth
         }
     }
 
-    public void CheckAttack(bool canAttack, Transform enemy)
+    public void CheckAttack(bool canAttack, Transform target)
     {
         this.canAttack = canAttack;
-        target = enemy;
+        this.target = target;
+    }
+
+    public void FollowTargetBeforeAttack(bool canFollow, Transform target)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
     }
 
     public void RotateToTarget()
@@ -181,7 +162,6 @@ public class HeroController : BaseController, IHealth
         CurrentHealth -= amount;
         if (CurrentHealth <= 0)
         {
-            CurrentHealth = 0;
             ChangeState(new DeadState(this));
         }
         UpdateHealthSlider();
@@ -212,9 +192,16 @@ public class HeroController : BaseController, IHealth
 
     public void Dead()
     {
-        Debug.Log("Hero has died");
-        animator.SetTrigger("Die");
-        gameObject.SetActive(false);
+        if (IsDead)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+    public void SetStateDie()
+    {
+        CurrentHealth = 0;
+        healthSlider.gameObject.SetActive(false);
+        rb.useGravity = false;
     }
 
     private void UpdateHealthSlider()

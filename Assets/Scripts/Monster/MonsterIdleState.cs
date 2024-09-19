@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterIdleState : IState
@@ -10,18 +8,23 @@ public class MonsterIdleState : IState
     {
         this.monster = monster;
     }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter IdleState");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        monster.ReturnHome();
+        if (monster.Attack())
+        {
+            monster.ChangeState(new MonsterMoveState(monster));
+        }
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit IdleState");
     }
 }

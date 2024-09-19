@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,14 +8,23 @@ public class MonsterController : BaseController, IHealth
     public float CurrentHealth { get; set; }
     public float MaxHealth { get; set; }
 
+    [Header("attack")]
+    private bool canAtatck;
     private bool isFollowing;
     private Transform target;
+    private Vector3 initPosition;
+    private Quaternion initRotation;
 
     protected override void Awake()
     {
         base.Awake();
         navMeshAgent = GetComponent<NavMeshAgent>();
         currentState = new MonsterIdleState(this);
+        MaxHealth = 100f;
+        CurrentHealth = MaxHealth;
+
+        initPosition = transform.position;
+        initRotation = transform.rotation;
     }
 
     void Update()
@@ -36,32 +42,34 @@ public class MonsterController : BaseController, IHealth
     #endregion
 
     #region MoveManager
-    private void Move()
-    {
-
-    }
-
     public void SetTarget(bool isFollowing, Transform target)
     {
         this.isFollowing = isFollowing;
         this.target = target;
     }
 
-    private void FollowTarget()
+    public void FollowTarget()
     {
-        if (isFollowing && target != null)
+        navMeshAgent.SetDestination(target.position);
+    }
+
+    public void ReturnHome()
+    {
+        navMeshAgent.SetDestination(initPosition);
+        transform.rotation = initRotation;
+    }
+
+    public bool Attack()
+    {
+        if (isFollowing && target != null && canAtatck)
         {
-            navMeshAgent.SetDestination(target.position);
+            return true;
         }
-        else
-        {
-            Move();
-        }
+        return false;
     }
     #endregion
 
     #region HealthManager
-
     public void Heal(float amount)
     {
         CurrentHealth = Mathf.Min(CurrentHealth + amount, MaxHealth);
@@ -70,6 +78,7 @@ public class MonsterController : BaseController, IHealth
     public void TakeDamage(float amount)
     {
         CurrentHealth -= amount;
+        canAtatck = true;
         if (CurrentHealth <= 0)
         {
             CurrentHealth = 0;
@@ -81,10 +90,9 @@ public class MonsterController : BaseController, IHealth
 
     public void Dead()
     {
-        Debug.Log("Hero has died");
+        Debug.Log("Monster has died");
         animator.SetTrigger("Die");
         gameObject.SetActive(false);
     }
-
     #endregion
 }

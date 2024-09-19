@@ -1,26 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterDeadState : IState
 {
     private MonsterController monster;
+
     public MonsterDeadState(MonsterController monster)
     {
         this.monster = monster;
     }
+
     public void Enter()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter DeadState");
     }
 
     public void Execute()
     {
-        throw new System.NotImplementedException();
+        // Implement dead logic here
     }
 
     public void Exit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Exit DeadState");
     }
 }

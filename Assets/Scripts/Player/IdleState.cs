@@ -11,7 +11,7 @@ public class IdleState : IState
 
     public void Enter()
     {
-        Debug.Log("Enter Idle State");
+        hero.animator.SetTrigger("Idle");
     }
 
     public void Execute()
@@ -24,6 +24,6 @@ public class IdleState : IState
 
     public void Exit()
     {
-        Debug.Log("Exit Idle State");
+        hero.animator.ResetTrigger("Idle");
     }
 }

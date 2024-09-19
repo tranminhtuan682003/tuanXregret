@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using UnityEngine.EventSystems; // Thư viện cho EventTrigger
+using System.Collections; // Thư viện cho IEnumerator
+using System.Collections.Generic; // Thư viện cho List
+
 
 public class SkillButtonManager : MonoBehaviour
 {
@@ -22,27 +25,46 @@ public class SkillButtonManager : MonoBehaviour
         {
             string skillName = skillNames[i];
             Button button = skillButtons[i];
-
-            // Disable button interaction during cooldown
-            button.onClick.AddListener(() => OnSkillButtonClick(skillName));
+            AddButtonListeners(button, skillName);
         }
     }
 
     private void Update()
     {
-        // Update button interactability based on cooldown status
         for (int i = 0; i < skillButtons.Count; i++)
         {
             string skillName = skillNames[i];
             Button button = skillButtons[i];
-
-            // Check if skill is on cooldown and disable button if needed
             button.interactable = !cooldownManager.IsSkillOnCooldown(skillName);
         }
     }
 
+    private void AddButtonListeners(Button button, string skillName)
+    {
+        EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
+
+        // Thêm sự kiện OnPointerDown để bắt đầu tấn công
+        EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry();
+        pointerDownEntry.eventID = EventTriggerType.PointerDown;
+        pointerDownEntry.callback.AddListener((data) => { OnSkillButtonClick(skillName); });
+        trigger.triggers.Add(pointerDownEntry);
+
+        // Thêm sự kiện OnPointerUp để ngừng tấn công
+        EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry();
+        pointerUpEntry.eventID = EventTriggerType.PointerUp;
+        pointerUpEntry.callback.AddListener((data) => { OnSkillButtonRelease(); });
+        trigger.triggers.Add(pointerUpEntry);
+    }
+
     private void OnSkillButtonClick(string skillName)
     {
+        heroController.attacking = true;
+        heroController.ChangeState(new AttackState(heroController));
         heroController.OnAttack(skillName);
+    }
+
+    private void OnSkillButtonRelease()
+    {
+        heroController.attacking = false;
     }
 }
